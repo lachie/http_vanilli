@@ -30,20 +30,13 @@ class EgMapper
   end
 
   def map_request(request)
-    code = 200
-    msg = 'cool'
+    response = HttpVanilli::NetHttp::Response.new(200,'cool')
+    response.body = "boddy"
 
-    response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
-    response.instance_variable_set(:@body, 'bodacious')
-    # headers_extracted_from_options.each { |name, value| response[name] = value }
+    nhrsp = response.to_net_http
+    request.block[nhrsp] if request.block
 
-    response.instance_variable_set(:@read, true)
-    response.extend HttpVanilli::NetHttp::Response
-
-    request.block[response] if request.block
-
-    pp response
-    response
+    nhrsp
   end
 
   def unmapped_request(request)

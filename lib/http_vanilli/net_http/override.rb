@@ -1,6 +1,7 @@
 require 'http_vanilli/net_http/stubs'
 require 'http_vanilli/net_http/util'
 require 'http_vanilli/net_http/request'
+require 'http_vanilli/net_http/response'
 require 'net/http'
 require 'net/https'
 require 'stringio'

@@ -14,7 +14,7 @@ module HttpVanilli
 
     end
 
-    module Response #:nodoc:
+    module ResponseMixin #:nodoc:
       def read_body(*args, &block)
         yield @body if block_given?
         @body
