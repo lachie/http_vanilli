@@ -11,7 +11,9 @@ end
 
 module HttpVanilli
   autoload :Util   , 'http_vanilli/util'
+
   autoload :BasicMapper, 'http_vanilli/basic_mapper'
+  # autoload :Mapping    , 'http_vanilli/mapping'
 
   autoload :Request , 'http_vanilli/request'
   autoload :Response, 'http_vanilli/response'
