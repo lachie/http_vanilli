@@ -1,8 +1,20 @@
 require 'pathname'
+require 'pp'
+
+class Object
+  def tapp(tag=nil)
+    print "#{tag}=" if tag
+    pp self
+    self
+  end
+end
 
 module HttpVanilli
   autoload :Util   , 'http_vanilli/util'
-  autoload :Request, 'http_vanilli/request'
+  autoload :BasicMapper, 'http_vanilli/basic_mapper'
+
+  autoload :Request , 'http_vanilli/request'
+  autoload :Response, 'http_vanilli/response'
 
   class << self
     def here
