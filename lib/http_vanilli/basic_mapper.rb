@@ -2,16 +2,24 @@ require 'addressable/uri'
 
 module HttpVanilli
   class BasicMapper
-    attr_accessor :mapping_class
+    attr_accessor :responder
 
-    def initialize(mapping_class=HttpVanilli::Mapping)
-      self.mapping_class = mapping_class
+    def initialize(responder)
+      self.responder = responder
+
+      #case mapping_class
+      #when Hash
+        ## XXX setup mapping map
+      #when HttpVanilli::BasicMapping
+        ## XXX setup single default mapping class
+      #end
     end
 
-    def mappings; @mappings ||= [] end
+    def responders; @responders ||= [] end
 
-    def add_mapping(*args,&block)
-      mappings << mapping_class.new(*args,&block)
+    def add_responder(*args,&block)
+      # XXX switch mapping classes
+      responders << responder.new(*args,&block)
     end
 
     ## Mapping API
@@ -23,12 +31,12 @@ module HttpVanilli
 
     # Should we map the request?
     def map_request?(request)
-      !! find_mapping(request)
+      !! find_responder(request)
     end
 
     # Map the request
     def map_request(request)
-      find_mapping(request).response_for_request(request)
+      find_responder(request).response_for_request(request)
     end
 
     # The request wasn't matched and normal net connection was disallowed.
@@ -38,8 +46,8 @@ module HttpVanilli
 
     protected
 
-    def find_mapping(request)
-      mappings.find {|mapping| mapping.match?(request)}
+    def find_responder(request)
+      responders.find {|responder| responder.match?(request)}
     end
   end
 end

@@ -3,7 +3,7 @@ require 'http_vanilli/request'
 module HttpVanilli
   module NetHttp
     class Request < HttpVanilli::Request
-      attr_reader :block, :uri
+      attr_reader :block, :uri, :method
 
       def initialize(http,request,body=nil,&block)
         @http             = http
