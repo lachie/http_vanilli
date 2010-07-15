@@ -4,10 +4,10 @@ module HttpVanilli
       libs = {"Samuel" => defined?(Samuel)}
       warnings = libs.select { |_, loaded| loaded }.map do |name, _|
         <<-TEXT.gsub(/ {10}/, '')
-          \e[1mWarning: FakeWeb was loaded after #{name}\e[0m
+          \e[1mWarning: HttpVanilli was loaded after #{name}\e[0m
           * #{name}'s code is being ignored when a request is handled by HttpVanilli::NetHttp,
             because both libraries work by patching Net::HTTP.
-          * To fix this, just reorder your requires so that FakeWeb is before #{name}.
+          * To fix this, just reorder your requires so that HttpVanilli is before #{name}.
         TEXT
       end
       $stderr.puts "\n" + warnings.join("\n") + "\n" if warnings.any?
@@ -25,9 +25,9 @@ module HttpVanilli
                     map do |name, _|
         <<-TEXT.gsub(/ {10}/, '')
           \e[1mWarning: #{name} was loaded after HttpVanilli::NetHttp\e[0m
-          * FakeWeb's code is being ignored, because #{name} replaces parts of
+          * HttpVanilli's code is being ignored, because #{name} replaces parts of
             Net::HTTP without deferring to other libraries. This will break Net::HTTP requests.
-          * To fix this, just reorder your requires so that #{name} is before FakeWeb.
+          * To fix this, just reorder your requires so that #{name} is before HttpVanilli.
         TEXT
       end
       $stderr.puts "\n" + warnings.join("\n") + "\n" if warnings.any?

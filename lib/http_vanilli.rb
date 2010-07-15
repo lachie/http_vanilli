@@ -38,13 +38,18 @@ module HttpVanilli
       !(FalseClass === @allow_net_connect)
     end
 
+    def basic_mapper!
+      self.request_mapper = BasicMapper.new
+    end
+
     def request_mapper=(request_mapper)
       @request_mapper = request_mapper
     end
     def request_mapper
       unless @request_mapper
-        raise "HttpVanilli requires a request mapper\n" +
-              "Plug one in with HttpVanilli.request_mapper=Yourmapper.new"
+        raise "HttpVanilli requires a request mapper.\n" +
+              "Use the basic mapper with HttpVanilli.basic_mapper! ,\n" +
+              "or plug one in with HttpVanilli.request_mapper=Yourmapper.new"
       end
       @request_mapper
     end
