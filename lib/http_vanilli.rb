@@ -13,7 +13,7 @@ module HttpVanilli
   autoload :Util   , 'http_vanilli/util'
 
   autoload :BasicMapper, 'http_vanilli/basic_mapper'
-  # autoload :Mapping    , 'http_vanilli/mapping'
+  autoload :Mapping    , 'http_vanilli/mapping'
 
   autoload :Request , 'http_vanilli/request'
   autoload :Response, 'http_vanilli/response'
@@ -31,20 +31,23 @@ module HttpVanilli
     def allow_net_connect!
       @allow_net_connect = true
     end
+
     def disallow_net_connect!
       @allow_net_connect = false
     end
+
     def allow_net_connect?
       !(FalseClass === @allow_net_connect)
     end
 
-    def basic_mapper!
-      self.request_mapper = BasicMapper.new
+    def basic_mapper!(mapping_class=HttpVanilli::Mapping)
+      self.request_mapper = BasicMapper.new(mapping_class)
     end
 
     def request_mapper=(request_mapper)
       @request_mapper = request_mapper
     end
+
     def request_mapper
       unless @request_mapper
         raise "HttpVanilli requires a request mapper.\n" +
