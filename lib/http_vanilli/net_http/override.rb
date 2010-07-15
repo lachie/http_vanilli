@@ -48,7 +48,6 @@ module Net  #:nodoc: all
     end
 
     def request_with_http_vanilli(request, body = nil, &block)
-
       mapper = HttpVanilli.request_mapper
 
       vanilli_request = mapper.build_request(:net_http, self, request, body, &block)

@@ -1,28 +1,9 @@
 require 'spec_helper'
 require 'http_vanilli/test_adapters/rspec'
+# require 'http_vanilli/net_http'
 require 'addressable/uri'
 require 'open-uri'
 
-class EgMapping
-  def initialize(method,url,&block)
-    @method = method
-    @url    = Addressable::URI.heuristic_parse(url)
-    @block  = block
-  end
-
-  def match?(request)
-    (request.host == @url.host).tapp(:match?)
-  end
-
-  def response_for_request(request)
-    response = HttpVanilli::NetHttp::Response.new(*@block.call)
-
-    nh_rsp = response.to_net_http
-    request.block[nh_rsp] if request.block
-
-    nh_rsp
-  end
-end
 
 describe 'stubbing' do
   #include HttpVanilli::RSpec
@@ -30,8 +11,29 @@ describe 'stubbing' do
   before do
     HttpVanilli.disallow_net_connect!
     HttpVanilli.override_net_http!
-    @m = HttpVanilli.request_mapper = HttpVanilli::BasicMapper.new
-    @m.mapping_class = EgMapping
+
+    class ::EgMapping
+      include HttpVanilli::NetHttp::ResponseYield
+
+      def initialize(method,url,&block)
+        @method = method
+        @url    = Addressable::URI.heuristic_parse(url)
+        @block  = block
+      end
+
+      def match?(request)
+        (request.host == @url.host)
+      end
+
+      def build_response(request)
+        response = HttpVanilli::NetHttp::Response.new(*@block.call)
+
+        yield_response(response,request)
+      end
+        
+    end
+
+    @m = HttpVanilli.request_mapper = HttpVanilli::BasicMapper.new(EgMapping)
   end
 
   describe "expectation" do

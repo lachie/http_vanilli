@@ -4,6 +4,10 @@ module HttpVanilli
   class BasicMapper
     attr_accessor :mapping_class
 
+    def initialize(mapping_class)
+      self.mapping_class = mapping_class
+    end
+
     def mappings; @mappings ||= [] end
 
     def build_request(kind,http,request,body,&block)
@@ -20,7 +24,7 @@ module HttpVanilli
 
     def map_request(request)
       mapping = map_request?(request)
-      mapping.response_for_request(request)
+      mapping.build_response(request)
     end
 
     def unmapped_request(request)

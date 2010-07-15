@@ -1,5 +1,13 @@
 module HttpVanilli
   module NetHttp
+    module ResponseYield
+      def yield_response(response,request)
+        nh_rsp = response.to_net_http
+        request.block[nh_rsp] if request.block
+        nh_rsp
+      end
+    end
+
     class Response < HttpVanilli::Response
       attr_accessor :headers, :body
       attr_reader :code, :message
