@@ -1,7 +1,7 @@
 module HttpVanilli
   module NetHttp
-    module ResponseYield
-      def yield_response(response,request)
+    module YieldResponse
+      def nh_yield_response(response,request)
         nh_rsp = response.to_net_http
         request.block[nh_rsp] if request.block
         nh_rsp
