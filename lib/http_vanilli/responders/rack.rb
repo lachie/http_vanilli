@@ -12,7 +12,7 @@ module HttpVanilli
       BadStatus = 999
       def match?(request)
         rsp = rack_response(request)
-        rsp.first != BadStatus
+        Array === rsp && rsp.first != BadStatus
       end
 
       def rack_response(request)
