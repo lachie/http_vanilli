@@ -1,80 +1,413 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
-	<title>lachie/http_vanilli @ GitHub</title>
-	
-	<style type="text/css">
-		body {
-  		margin-top: 1.0em;
-  		background-color: #e74711;
-		  font-family: "Helvetica,Arial,FreeSans";
-  		color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-		h1 { font-size: 3.8em; color: #18b8ee; margin-bottom: 3px; }
-		h1 .small { font-size: 0.4em; }
-		h1 a { text-decoration: none }
-		h2 { font-size: 1.5em; color: #18b8ee; }
-    h3 { text-align: center; color: #18b8ee; }
-    a { color: #18b8ee; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-		pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-	</style>
-	
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>api.eg.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
 </head>
-
 <body>
-  <a href="http://github.com/lachie/http_vanilli"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+<div id='container'>
+  <div id="background"></div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>api.eg.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-1">#</a>
+        </div>
+        <p> <code>HttpVanilli</code> is a flexible web connection mocking library. It gives you lip-synced http connections with pluggable band members for testing.</p>
 
-  <div id="container">
+<p> Its good for testing your webservice-interfacing code.</p>
 
-    <div class="download">
-      <a href="http://github.com/lachie/http_vanilli/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/lachie/http_vanilli/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
+<p> This file is an executable example of <code>HttpVanilli</code>&rsquo;s basic API. Its written using <a href="http://github.com/quackingduck/exemplor">Myles Byrne&rsquo;s Exemplor</a>.</p>
 
-    <h1><a href="http://github.com/lachie/http_vanilli">http_vanilli</a>
-      <span class="small">by <a href="http://github.com/lachie">lachie</a></span></h1>
+<p> To run it:</p>
 
-    <div class="description">
-      Lip-synced http connections with pluggable band members for testing.
-    </div>
+<pre><code> $ cd http_vanilli/examples
+ $ bundle install
+ $ ruby api.eg.rb
+</code></pre>
 
-    <h2>Authors</h2>
-<p>lachie (lachiec@gmail.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Lachie Cox (lachiec@gmail.com)<br/>      </p>
+<p> <code>HttpVanilli</code>&rsquo;s code is hosted at <a href="http://github.com/lachie/http_vanilli">github</a>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;eg.helper&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;http_vanilli&#39;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-2">#</a>
+        </div>
+        <p> First off, enable <code>HttpVanilli</code> by overriding the core request methods of <code>Net::HTTP</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="no">HttpVanilli</span><span class="o">.</span><span class="n">override_net_http!</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-3">#</a>
+        </div>
+        <p> I choose to disallow normal connections to the net;
+ if I didn&rsquo;t do this, requests not matched by my responders would go out to the internet.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="no">HttpVanilli</span><span class="o">.</span><span class="n">disallow_net_connect!</span>
+
+<span class="n">eg</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-4">#</a>
+        </div>
+        <p> Tell <code>HttpVanilli</code> to use a new instance of the <code>HttpVanilli::BasicMapper</code>.
+ (You could also create your own mapper class and set it in with <code>HttpVanilli.request_mapper=</code>.)</p>
+
+<p> This is a good method to call in your test library&rsquo;s setup phase, as creating a new instance of the mapper
+ cleans out responders and other state stored in past instances.</p>
+
+<p> You should keep in mind that there are a few pitfalls to implementing a request mapper, so sticking with
+ <code>HttpVanilli::BasicMapper</code> is a good idea initially.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="vi">@m</span> <span class="o">=</span> <span class="no">HttpVanilli</span><span class="o">.</span><span class="n">use_basic_mapper!</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-5">#</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="n">eg</span><span class="o">.</span><span class="n">helpers</span> <span class="k">do</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-6">#</a>
+        </div>
+        <p> An assertion. The block should raise if a request is unhandled.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">def</span> <span class="nf">Unmatched</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+    <span class="k">begin</span>
+      <span class="k">yield</span>
+      <span class="no">Assert</span><span class="p">(</span><span class="kp">false</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">Exemplor</span><span class="o">::</span><span class="no">Assert</span><span class="o">::</span><span class="no">Failure</span>
+      <span class="k">raise</span> <span class="vg">$!</span>
+    <span class="k">rescue</span>
+      <span class="no">Assert</span><span class="p">(</span><span class="vg">$!</span><span class="o">.</span><span class="n">message</span><span class="o">[/</span><span class="n">unmatched_request</span><span class="o">/]</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="nb">require</span> <span class="s1">&#39;net/http&#39;</span>
+
+  <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">form_vars</span><span class="o">=</span><span class="p">{})</span>
+    <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">post_form</span><span class="p">(</span><span class="no">URI</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="n">form_vars</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-7">#</a>
+        </div>
+        <h1>The block responder</h1>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;open-uri&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;addressable/uri&#39;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-8">#</a>
+        </div>
+        <p> The block responder is simple &amp; flexible, but doesn&rsquo;t do anything to make your life easier.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="n">eg</span> <span class="s1">&#39;using the block matcher&#39;</span> <span class="k">do</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-9'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-9">#</a>
+        </div>
+        <p> The block is called for each request.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="vi">@m</span><span class="o">.</span><span class="n">add_block_responder</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="o">|</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-10">#</a>
+        </div>
+        <p> Requests are instances of <code>HttpVanilli::NetHttp::Request</code>.
+ <code>req.uri</code> is an <code>Addressable::URI</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">query</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">query_values</span>
+
+    <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s1">&#39;google.com&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">query</span><span class="o">[</span><span class="s1">&#39;c&#39;</span><span class="o">]</span> <span class="o">==</span> <span class="s1">&#39;AU&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">query</span><span class="o">[</span><span class="s1">&#39;q&#39;</span><span class="o">]</span> <span class="o">==</span> <span class="s1">&#39;profits&#39;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-11'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-11">#</a>
+        </div>
+        <p> The block returns a rack-style response to respond.</p>
+
+<p> If nil is returned, the request is considered to have been unhandled by the block.</p>
+
+<p> A corollary of this is that the block can be called multiple times for each request.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="o">[</span><span class="mi">200</span><span class="p">,{},</span><span class="o">[</span><span class="s1">&#39;returned search&#39;</span><span class="o">]]</span>
+    <span class="k">end</span>
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-12">#</a>
+        </div>
+        <p> Now to the requests!</p>
+
+<p> <code>open</code> here is <code>open-uri</code> enhanced, to fetch urls.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="no">Unmatched</span> <span class="p">{</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;http://bing.com/search.asp?q=profits&quot;</span><span class="p">)</span> <span class="p">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-13'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-13">#</a>
+        </div>
+        <p> Notice how both of these assertions are true, even though the query keys are in different orders.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="no">Assert</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;http://google.com/?c=AU&amp;q=profits&quot;</span> <span class="p">)</span><span class="o">.</span><span class="n">read</span> <span class="o">==</span> <span class="s1">&#39;returned search&#39;</span> <span class="p">)</span>
+  <span class="no">Assert</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;https://google.com/?q=profits&amp;c=AU&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span> <span class="o">==</span> <span class="s1">&#39;returned search&#39;</span> <span class="p">)</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-14'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-14">#</a>
+        </div>
+        <h1>Using a rack app as a responder.</h1>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-15'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-15">#</a>
+        </div>
+        <p> Heres a trivial rack app.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">class</span> <span class="nc">RackSearchApp</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">app</span><span class="p">,</span><span class="n">host</span><span class="p">)</span>
+    <span class="vi">@app</span>  <span class="o">=</span> <span class="n">app</span>
+    <span class="vi">@host</span> <span class="o">=</span> <span class="n">host</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-16'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-16">#</a>
+        </div>
+        <p> I&rsquo;m accessing <code>env</code> directly to demonstrate that you can, but of course you can use
+ <code>Rack::Request</code> &amp; <code>Rack::Response</code> if you like.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">if</span> <span class="n">env</span><span class="o">[</span><span class="s1">&#39;SERVER_NAME&#39;</span><span class="o">]</span> <span class="o">==</span> <span class="vi">@host</span>
+      <span class="n">query</span> <span class="o">=</span> <span class="n">env</span><span class="o">[</span><span class="s1">&#39;QUERY_STRING&#39;</span><span class="o">][/</span><span class="n">q</span><span class="o">=</span><span class="p">(</span><span class="o">.</span><span class="n">*</span><span class="p">)</span><span class="o">/</span><span class="p">,</span><span class="mi">1</span><span class="o">]</span>
+      <span class="o">[</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">},</span> <span class="o">[</span><span class="n">query</span><span class="o">.</span><span class="n">reverse</span><span class="o">.</span><span class="n">upcase</span><span class="o">]]</span>
+    <span class="k">else</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-17'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-17">#</a>
+        </div>
+        <p> You could return nil here, but then your app wouldn&rsquo;t quite be rack compliant.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="vi">@app</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">eg</span> <span class="s1">&#39;a rack responder&#39;</span> <span class="k">do</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-18'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-18">#</a>
+        </div>
+        <p> Arguments after the rack app&rsquo;s class become arguments to the app&rsquo;s initializer.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="vi">@m</span><span class="o">.</span><span class="n">add_rack_responder</span><span class="p">(</span><span class="no">RackSearchApp</span><span class="p">,</span><span class="s1">&#39;google.com&#39;</span><span class="p">)</span>
+
+  <span class="no">Assert</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;http://google.com/zhang/alang?q=ruby&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span> <span class="o">==</span> <span class="s1">&#39;YBUR&#39;</span> <span class="p">)</span>
+  <span class="no">Assert</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;https://google.com/?q=python&#39;</span>        <span class="p">)</span><span class="o">.</span><span class="n">read</span> <span class="o">==</span> <span class="s1">&#39;NOHTYP&#39;</span> <span class="p">)</span>
+  <span class="no">Unmatched</span> <span class="p">{</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;http://bing.com/?q=ruby&#39;</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-19'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-19">#</a>
+        </div>
+        <h2>Yep, its rack.</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;sinatra/base&#39;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-20'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-20">#</a>
+        </div>
+        <p> Which means you can use any rack-compliant framework. Obviously simpler is better for the task-at-hand (i.e. testing).</p>
+
+<p> Here&rsquo;s using Sinatra:</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">class</span> <span class="nc">SinatraSearch</span> <span class="o">&lt;</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">get</span> <span class="s2">&quot;/zhang/alang&quot;</span> <span class="k">do</span>
+    <span class="n">params</span><span class="o">[</span><span class="ss">:q</span><span class="o">].</span><span class="n">reverse</span><span class="o">.</span><span class="n">upcase</span>
+  <span class="k">end</span>
+  <span class="n">post</span> <span class="s2">&quot;/&quot;</span> <span class="k">do</span>
+    <span class="n">params</span><span class="o">[</span><span class="ss">:q</span><span class="o">].</span><span class="n">upcase</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">eg</span> <span class="s1">&#39;a sinatra rack responder&#39;</span> <span class="k">do</span>
+  <span class="vi">@m</span><span class="o">.</span><span class="n">add_rack_responder</span><span class="p">(</span><span class="no">SinatraSearch</span><span class="p">)</span>
+
+  <span class="no">Assert</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;http://google.com/zhang/alang?q=ruby&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span> <span class="o">==</span> <span class="s1">&#39;YBUR&#39;</span>   <span class="p">)</span>
+  <span class="no">Assert</span><span class="p">(</span> <span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://google.com/&#39;</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;python&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">body</span> <span class="o">==</span> <span class="s1">&#39;PYTHON&#39;</span> <span class="p">)</span>
+  <span class="no">Unmatched</span> <span class="p">{</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;http://google.com/nomatch/?q=ruby&#39;</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-21'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-21">#</a>
+        </div>
+        <h1>A custom responder</h1>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-22'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-22">#</a>
+        </div>
+        <p> <code>EgResponder</code> shows you how to implement your own responder. A responder must implement two methods:</p>
+
+<ul>
+<li><code>match?(request)</code></li>
+<li><code>rack_response(request)</code></li>
+</ul>
 
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/lachie/http_vanilli/zipball/master">zip</a> or
-      <a href="http://github.com/lachie/http_vanilli/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/lachie/http_vanilli</pre>
-    </p>
+<p> Arguments to your responder&rsquo;s <code>initialize</code> are passed verbatim from <code>BasicMapper#add_responder</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">class</span> <span class="nc">EgResponder</span>
+  <span class="kp">include</span> <span class="no">HttpVanilli</span><span class="o">::</span><span class="no">AbstractResponder</span>
 
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/lachie/http_vanilli">lachie/http_vanilli</a>
-    </div>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">test_string</span><span class="p">)</span>
+    <span class="vi">@method</span>      <span class="o">=</span> <span class="nb">method</span>
+    <span class="vi">@url</span>         <span class="o">=</span> <span class="no">Addressable</span><span class="o">::</span><span class="no">URI</span><span class="o">.</span><span class="n">heuristic_parse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="vi">@test_string</span> <span class="o">=</span> <span class="n">test_string</span>
+  <span class="k">end</span>
 
-  </div>
+  <span class="k">def</span> <span class="nf">match?</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="vi">@url</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
+  <span class="k">end</span>
 
+  <span class="k">def</span> <span class="nf">rack_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="o">[</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;content-type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/smileys&#39;</span><span class="p">},</span> <span class="o">[</span><span class="vi">@test_string</span><span class="o">]]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">eg</span> <span class="s1">&#39;a custom responder&#39;</span> <span class="k">do</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-23'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-23">#</a>
+        </div>
+        <p> We need to add the <code>EgResponder</code> to the mapper. Here&rsquo;s how to do it as we&rsquo;re creating the mapper.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="vi">@m</span> <span class="o">=</span> <span class="no">HttpVanilli</span><span class="o">.</span><span class="n">use_basic_mapper!</span><span class="p">(</span><span class="ss">:eg</span> <span class="o">=&gt;</span> <span class="no">EgResponder</span><span class="p">)</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-24'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-24">#</a>
+        </div>
+        <p> Now add instances of the <code>EgResponder</code> by referring to it by its key <code>:eg</code>.</p>
+
+<p> Arguments after <code>:eg</code> are passed to <code>EgResponder</code> as is.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="vi">@m</span><span class="o">.</span><span class="n">add_responder</span><span class="p">(</span><span class="ss">:eg</span><span class="p">,</span> <span class="ss">:get</span><span class="p">,</span> <span class="s2">&quot;http://bing.com&quot;</span>  <span class="p">,</span> <span class="s2">&quot;gnarly&quot;</span><span class="p">)</span>
+  <span class="vi">@m</span><span class="o">.</span><span class="n">add_responder</span><span class="p">(</span><span class="ss">:eg</span><span class="p">,</span> <span class="ss">:get</span><span class="p">,</span> <span class="s2">&quot;http://google.com&quot;</span><span class="p">,</span> <span class="s2">&quot;wikid&quot;</span><span class="p">)</span>
+
+  <span class="no">Assert</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;http://google.com&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span> <span class="o">==</span> <span class="s1">&#39;wikid&#39;</span>  <span class="p">)</span>
+  <span class="no">Assert</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;http://bing.com&quot;</span>  <span class="p">)</span><span class="o">.</span><span class="n">read</span> <span class="o">==</span> <span class="s1">&#39;gnarly&#39;</span> <span class="p">)</span>
   
+  <span class="no">Assert</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;http://google.com&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span> <span class="o">==</span> <span class="s1">&#39;wikid&#39;</span>  <span class="p">)</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    </table>
+</div>
 </body>
-</html>
