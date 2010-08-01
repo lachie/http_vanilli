@@ -8,7 +8,13 @@
 
 ## Usage
 
-[Please see api.eg.html](http://github.com/lachie/http_vanilli/raw/master/examples/api.eg.html)
+[Please see api.eg.html][api]
+
+[api]: http://github.com/lachie/http_vanilli/raw/master/examples/api.eg.html
+
+## Rationale
+
+`TODO`, but see [the api example][api] for how it differs from Fakeweb & webmock.
 
 ## Note on Patches/Pull Requests
 
@@ -18,9 +24,15 @@
 * Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-## Details
+## Credits
 
 `HttpVanilli` is by Lachie Cox.
+
+`Net::HTTP` integration code appropriated from [Fakeweb][fw] (It seems fakeweb is under GPL; I'll rewrite that code if that's a problem)
+
+[fw]: http://github.com/chrisk/fakeweb
+
+## Meta
 
 `HttpVanilli`'s code is hosted at http://github.com/lachie/http_vanilli.
 
