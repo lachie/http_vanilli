@@ -50,16 +50,22 @@ module Net  #:nodoc: all
     def request_with_http_vanilli(request, body = nil, &block)
       mapper = HttpVanilli.request_mapper
 
-      vanilli_request = mapper.build_request(:net_http, self, request, body, &block)
+      request.set_body_internal body
 
+      # Wrap Net::HTTPRequest & associated info in a HttpVanilli::Request
+      vanilli_request = mapper.build_request(:net_http, self, request, &block)
+
+      # The mapper can map the request. Do it.
       if mapper.map_request?(vanilli_request)
         @socket = Net::HTTP.socket_type.new
         mapper.map_request(vanilli_request)
 
+      # otherwise, either allow the request to happen as normal,
       elsif HttpVanilli.allow_net_connect?
         connect_without_http_vanilli
         request_without_http_vanilli(request, body, &block)
 
+      # or note the request as unmapped.
       else
         mapper.unmapped_request(vanilli_request)
       end
