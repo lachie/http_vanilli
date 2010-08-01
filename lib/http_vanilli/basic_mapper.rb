@@ -4,29 +4,36 @@ module HttpVanilli
   class BasicMapper
     attr_accessor :responder
 
-    def initialize(responder)
-      self.responder = responder
+    def initialize(extra_responders = {})
+      responder_classes.update(extra_responders)
+    end
 
-      #case mapping_class
-      #when Hash
-        ## XXX setup mapping map
-      #when HttpVanilli::BasicMapping
-        ## XXX setup single default mapping class
-      #end
+    def responder_classes
+      @responder_classes ||= {
+        :block => HttpVanilli::Responders::Block,
+        :rack  => HttpVanilli::Responders::Rack
+      }
     end
 
     def responders; @responders ||= [] end
 
-    def add_responder(*args,&block)
-      # XXX switch mapping classes
-      responders << responder.new(*args,&block)
+    def add_block_responder(*args,&block)
+      responders << responder_classes[:block].new(*args,&block)
+    end
+
+    def add_rack_responder(*args,&block)
+      responders << responder_classes[:rack].new(*args,&block)
+    end
+
+    def add_responder(kind,*args,&block)
+      responders << responder_classes[kind].new(*args,&block)
     end
 
     ## Mapping API
 
     # Take the info from the innards of Net::HTTP and build a request.
-    def build_request(kind,http,request,body,&block)
-      HttpVanilli::Request.build(kind,http,request,body,&block)
+    def build_request(kind,http,request,&block)
+      HttpVanilli::Request.build(kind,http,request,&block)
     end
 
     # Should we map the request?

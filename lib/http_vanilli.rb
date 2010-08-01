@@ -42,8 +42,8 @@ module HttpVanilli
       !(FalseClass === @allow_net_connect)
     end
 
-    def use_basic_mapper!(responder)
-      self.request_mapper = BasicMapper.new(responder)
+    def use_basic_mapper!(extra_responder_classes={})
+      self.request_mapper = BasicMapper.new(extra_responder_classes)
     end
 
     def request_mapper=(request_mapper)
