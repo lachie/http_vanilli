@@ -9,7 +9,10 @@
 #     $ bundle install
 #     $ ruby api.eg.rb
 #
+# `HttpVanilli`'s code is hosted at [github][gh].
+#
 # [eg]: http://github.com/quackingduck/exemplor
+# [gh]: http://github.com/lachie/http_vanilli
 
 require 'eg.helper'
 require 'http_vanilli'
