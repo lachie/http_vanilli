@@ -1,4 +1,7 @@
 require 'rubygems'
+require 'bundler'
+Bundler.setup
+
 require 'exemplor'
 require 'pathname'
 
