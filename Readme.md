@@ -10,7 +10,7 @@
 
 [Please see api.eg.html][api]
 
-[api]: http://github.com/lachie/http_vanilli/raw/master/examples/api.eg.html
+[api]: http://lachie.github.com/http_vanilli 
 
 ## Rationale
 
