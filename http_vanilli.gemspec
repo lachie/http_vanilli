@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = "http_vanilli"
  
   s.add_development_dependency "exemplor"
+
+  s.add_dependency 'addressable', '>= 2.2.0'
  
   s.files        = Dir.glob("{bin,lib}/**/*") # + %w(LICENSE README.md CHANGELOG.md)
   # s.executables  = ['bundle']
