@@ -19,6 +19,8 @@ module HttpVanilli
         @method = request.method.downcase.to_sym
       end
 
+      alias_method :url, :uri
+
       def host; @uri.host end
 
       def to_s
