@@ -3,7 +3,7 @@ module HttpVanilli
     include HttpVanilli::NetHttp::YieldResponse
 
     def response_for_request(request)
-      code,headers,body = rack_response(request)
+      code,headers,body = *rack_response(request)
 
       response = HttpVanilli::NetHttp::Response.new(code,headers,body)
 
