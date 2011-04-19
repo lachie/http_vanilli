@@ -39,12 +39,22 @@ module Net  #:nodoc: all
   end
 
   class HTTP
+    # add some class methods
     class << self
       def socket_type_with_http_vanilli
         HttpVanilli::NetHttp::StubSocket
       end
       alias_method :socket_type_without_http_vanilli, :socket_type
       alias_method :socket_type, :socket_type_with_http_vanilli
+
+      def last_request_index
+        @last_request_index ||= -1
+      end
+
+      def next_request_index
+        @last_request_index ||= -1
+        @last_request_index += 1
+      end
     end
 
     def request_with_http_vanilli(request, body = nil, &block)
@@ -53,7 +63,7 @@ module Net  #:nodoc: all
       request.set_body_internal body
 
       # Wrap Net::HTTPRequest & associated info in a HttpVanilli::Request
-      vanilli_request = mapper.build_request(:net_http, self, request, &block)
+      vanilli_request = mapper.build_request(:net_http, self, request, self.class.next_request_index, &block)
 
       # The mapper can map the request. Do it.
       if mapper.map_request?(vanilli_request)

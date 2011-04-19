@@ -32,8 +32,8 @@ module HttpVanilli
     ## Mapping API
 
     # Take the info from the innards of Net::HTTP and build a request.
-    def build_request(kind,http,request,&block)
-      HttpVanilli::Request.build(kind,http,request,&block)
+    def build_request(kind, http, request, index, &block)
+      HttpVanilli::Request.build(kind, http, request, index, &block)
     end
 
     # Should we map the request?

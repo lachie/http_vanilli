@@ -3,11 +3,12 @@ require 'http_vanilli/request'
 module HttpVanilli
   module NetHttp
     class Request < HttpVanilli::Request
-      attr_reader :block, :uri, :method, :original_request
+      attr_reader :block, :uri, :method, :original_request, :index
 
-      def initialize(http,request,&block)
+      def initialize(http,request,index,&block)
         @http             = http
         @original_request = request
+        @index            = index
         @block            = block
 
         protocol = http.use_ssl? ? "https" : "http"

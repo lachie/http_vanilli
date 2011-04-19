@@ -45,7 +45,8 @@ module HttpVanilli
                      "rack.multiprocess" => false,
                      "rack.run_once"     => false,
 
-                     "rack.url_scheme" => request.uri.scheme
+                     "rack.url_scheme" => request.uri.scheme,
+                     "http_vanilli.request_index" => request.index
                    })
 
         app.call(env)
