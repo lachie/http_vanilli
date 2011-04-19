@@ -54,7 +54,14 @@ module HttpVanilli
 
       def app
         inner_app = lambda {|l| [BadStatus,{'Content-Type' => 'text/plain'},['']]}
-        @app_class.new(inner_app,*@args,&@block)
+
+        if Proc === @app_class
+          lambda {|env|
+            @app_class.call(env) || inner_app.call(env)
+          }
+        else
+          @app_class.new(inner_app,*@args,&@block)
+        end
       end
     end
   end
